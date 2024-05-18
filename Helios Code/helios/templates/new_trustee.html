@@ -1,0 +1,23 @@
+{% extends "helios/templates/cryptobase.html" %}
+
+{% block content %}
+  <h2 class="title trustee-title">Election: {{election.name}} &mdash; New Trustee &nbsp;</h2>
+  
+<form method="post" action="">
+  <div class="what-and-why add-trustee-form">
+<input type="hidden" name="csrf_token" value="{{csrf_token}}" />
+<div class="input-new-trustee">
+Name: <input type="text" name="name" size="60" placeholder="Enter the new trustee's name" /><br /><br />
+</div>
+<div class="input-new-trustee">
+Email: <input type="text" name="email" size="60" placeholder="Enter the new trustee's email (e.g: someone@example.com)"/><br /><br />
+</div>
+  </div>
+<br><br>
+<div class="two-buttons-seperate">
+<span><a class="medium button" href="{% url "election@trustees@view" election.uuid %}">Cancel</a></span>
+<input type="submit" class="button" value="Add Trustee" />
+</div>
+</form>
+<link rel="stylesheet" href="/static/main.css" type="text/css" />
+{% endblock %}

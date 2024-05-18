@@ -1,0 +1,50 @@
+{% if election.voting_has_started %}
+  {% if not election.voting_has_stopped %}
+
+<div id="cast_form">
+<form id="cast_confirm_form" method="POST" action="" onsubmit="show_waiting()">
+    <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
+    
+{% if status_update_label %}
+<div class="round" style="background: #eee; padding: 10px; border: 1px dashed #888;">
+<input type="checkbox" name="status_update" value="1" checked /> {{status_update_label}}<br />
+<blockquote style="font-size: 1.3em;">
+"{{status_update_message}}"
+</blockquote>
+<input type="hidden" name="status_update_message" value="{{status_update_message}}" />
+</div>
+<br />
+{% endif %}
+
+{% comment %} You are logged in as <u>{{voter.display_html_big|safe}}</u><br /><br /> {% endcomment %}
+    <div>
+      <br>
+      <br>
+      <span style="font-size:0.8em;"><br />You can cast as many ballots as you want.  Only the last one counts.</span>
+      <br>
+      <button type="submit" class="button_class_table cast_button">Cast this ballot</button>
+  </div>
+</form>
+
+<p>
+  <div>
+    <span style="font-size:0.8em;">If you cancel now, your ballot will <em>not</em> be recorded.<br />
+    You can start the voting process over again, of course.</span><br />
+  </div>
+</p>
+
+<!--  for now, for CSRF protection, no auto-submit just yet (benadida) -->
+<!-- <script>$('#cast_confirm_form').submit()</script>-->
+
+</div>
+
+  {% else %}
+<p style="font-size:1.4em;">
+  voting has stopped, sorry.
+</p>
+  {% endif %}
+{% else %}
+<p style="font-size:1.4em;">
+  voting has not yet begun, sorry.
+</p>
+{% endif %}

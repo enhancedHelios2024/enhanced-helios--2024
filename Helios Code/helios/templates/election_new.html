@@ -1,0 +1,46 @@
+{% extends TEMPLATE_BASE %}
+
+{% block content %}
+  {% comment %} <p>The value of my Helios is {{HELIOS_STATIC}}</p> {% endcomment %}
+  <h2 class="title">Create a New Election</h2>
+  
+  {% if error %}
+    <p style="color: red;">{{error}}</p>
+  {% endif %}
+  
+
+  <form class="prettyform" action="" method="POST" id="create_election_form">
+    <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
+    <table class="pretty">
+      {{election_form.as_table}}
+    </table>
+    
+    <!-- Include Flatpickr styles -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <!-- Include Flatpickr script -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <!-- Initialize Flatpickr for date fields -->
+    <script>
+      flatpickr("#id_voting_starts_at_date", {
+        enableTime: true,
+        dateFormat: "m/d/Y h:i K",
+      });
+
+      flatpickr("#id_voting_ends_at_date", {
+        enableTime: true,
+        dateFormat: "m/d/Y h:i K",
+      });
+    </script>
+    
+    <div class="buttons">
+      <input type="button" value="Cancel" class="button_class" onclick="window.location.href='/'" />
+
+      <label for="">&nbsp;</label><input type="submit" value="Submit" class="button_class" />
+    </div>
+    
+  </form>
+
+  <link rel="stylesheet" type="text/css" href="/static/boothcss/forms.css">
+{% endblock %}

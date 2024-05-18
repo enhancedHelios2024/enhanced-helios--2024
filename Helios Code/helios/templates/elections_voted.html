@@ -1,0 +1,25 @@
+{% extends TEMPLATE_BASE %}
+
+{% block content %}
+  <h2 class="title">Elections where you voted <span style="font-size:0.7em;"></h2>
+    <table class="election_overview">
+      <thead>
+        <tr>
+          <th>Election Name</th>
+          <th>Election Help Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for election in elections %}
+          <tr>
+            <td><a href="{% url "election@view" election.uuid %}">{{ election.name }}</a></td>
+            <td>{{ election.help_email }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+<div class="send_div">
+  <a class="button_class" href="/">Homepage</a>
+</div>
+{% endblock %}

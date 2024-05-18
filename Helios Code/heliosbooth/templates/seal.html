@@ -1,0 +1,63 @@
+<h3 class="center">Review your Ballot</h3>
+
+<div style="padding: 10px; margin-bottom: 10px; background-color: #eee; border: 1px #ddd solid;">
+{#foreach $T.questions as question}
+
+Question No. {$T.question$index + 1}: {$T.question.short_name}<br><br>
+{#if $T.choices[$T.question$index].length == 0}
+<div style="margin-left: 15px;">&#x2610; <b><i>No choice selected</i></b></div>
+{#/if}
+{#foreach $T.choices[$T.question$index] as choice}
+<div style="margin-left: 15px;">&#x2713; <b>{$T.choice}</b></div>
+{#/for}
+<br>
+{#if $T.choices[$T.question$index].length < $T.question.max}
+Selected {$T.choices[$T.question$index].length} out of the allowed range of options: {$T.question.min}-{$T.question.max}<br /><br>
+{#/if}
+<a class="button_class_table" onclick="BOOTH.show_question({$T.question$index}); return false;" href="#">Change this option</a>
+{#if !$T.question$last}<br><br>{#/if}
+{#/for}
+</div>
+
+<p class="center">Your ballot tracker is <b><tt style="font-size: 1.5em; word-break: break-all;">{$T.encrypted_vote_hash}</tt></b>.
+  <p class="center"><b> <u> Note</u>: A Ballot tracker </b> uniquely identifies your ballot from others. Please scan this QR code using the HelioScan app if you wish to verify that your ballot tracker accurately reflects your ballot and has not been tampered with at any stage from voting to successful casting.
+
+<div style="text-align: center; margin-bottom: 10px">
+      <div class="qr_code" id="qr_code_1" style="display: inline-block;"></div>
+      <br>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="button_class" id="proceed_button" onclick="BOOTH.cast_ballot();" style="display: block; margin: 0 auto;">Submit this Ballot</button>
+    </div>
+
+
+<form method="POST" action="{$T.cast_url}" id="send_ballot_form" class="prettyform">
+<input type="hidden" name="election_uuid" value="{$T.election_uuid}" />
+<input type="hidden" name="election_hash" value="{$T.election_hash}" />
+<textarea name="encrypted_vote" style="display: none;">
+{$T.encrypted_vote_json}
+</textarea>
+</form>
+
+{#if $T.election_metadata.use_advanced_audit_features}
+<div style="  background-color: #eee; padding: 10px; border: 1px solid #ddd; max-width: 100%; width:fit-content;">
+<h4 style="padding: 0px; margin:0px;"><a onclick="$('#auditbody').slideToggle(250);" href="#">Spoil & Verify Ballot</a> <span style="font-size: 0.8em; color: #444">(Optional)</span></h4>
+<div id="auditbody" style="display:none;">
+<p>
+If you choose to 'spoil & verify' this ballot, your selected choices for each question will be displayed.<br><br>
+If all information in your ballot is as expected (i.e., successful verification), an alert will be displayed stating that your ballot has been successfully verified.<br><br>
+Otherwise, a failure message will appear.<br><br>
+Either way, by verifying the ballot, <b>it will no longer be counted in the election tally</b>, as part of Helios's efforts to protect 
+all voters against coercion.<br><br>
+<b>But do not worry</b>, upon return to this page, a different ballot tracker will be displayed, although your selected choices remain the same, and therefore,
+when ready, you can then proceed to cast your ballot by clicking the 'Submit this Ballot' button.</br><br>
+It is important to stress that this verification process is optional.
+</p>
+<button class="button_class" onclick="BOOTH.audit_ballot();" class="pretty">Spoil &amp; Verify</button>
+</p>
+</div>
+</div>
+{#/if}
+
+<br />

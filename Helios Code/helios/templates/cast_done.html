@@ -1,0 +1,35 @@
+{% extends TEMPLATE_BASE %}
+{% block title %}Confirm Vote{% endblock %}
+
+{% block content %}
+<div class="successful_cast">
+<h1>{{election.name}} &mdash; Vote Successfully Cast!</h1>
+
+{% if vote_hash %}
+<p class="dont_class">
+  Your ballot tracker is:<br />
+    <span style="font-size:1.4em; font-weight: bold; word-break: break-word;">{{vote_hash}}</span>
+    <br />
+    <p class="no_margin margin_top">
+      <b>Note: </b> If you scaned the QR code before, you can re-scan it to check if your ballot has not been tampered with.
+    </p>
+    <img src="{{ qr_code }}" alt="QR Code" class="qr_code">
+</p>
+<p>
+  This ballot tracker mathematically ensures that your ballot is counted. <br> You can check all ballot trackers by viewing the <a href="{% url "election@voters@list-pretty" election.uuid %}">voter list (i.e., bulletin board)</a>, where your ballot tracker should appear within a few minutes.
+</p>
+{% endif %}
+
+{% if logout %}
+<p><b>For your safety, we have logged you out.</b></p>
+<iframe width="0" height="0" border="0" frameborder="0" src="{% url "auth@logout" %}">
+</iframe>
+{% endif %}
+
+<div class="back_div">
+<p style="font-size: 1.4em;">
+<a class="button_class" href="{% url "election@view" election.uuid %}">Election Homepage</a> 
+</p>
+</div>
+</div>
+{% endblock %}

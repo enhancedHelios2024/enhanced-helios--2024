@@ -1,0 +1,230 @@
+{% extends TEMPLATE_BASE %}
+
+{% block title %}Voters &amp; Ballot Tracking Center for {{election.name}}{% endblock %}
+{% block content %}
+<div class="trustee_parent_div">
+
+<h3 class="title">Election: {{election.name}} &mdash; Voters and Ballot Tracking Center <span style="font-size:0.7em;"></span></h3>
+
+<p>
+  <b>Who can vote?</b>
+  {% if election.private_p %}
+    {{election.pretty_eligibility|safe}}
+  {% else %}
+    <em>Given that your election is public, participation is open to everyone</em>. 
+  {% endif %}
+</p>
+
+{% if admin_p and not election.frozen_at %}
+  {% if election.private_p%}
+    <em>Your election is marked private, which means you cannot open registration up more widely</em>.<br />
+  {% else %}
+    <form method="post" action="{% url "election@voters@eligibility" election.uuid %}">
+
+      <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
+      {% comment %} <input type="radio" name="eligibility" value="openreg" {% if election.openreg and not election.eligibility %}CHECKED{% endif %} /> Anyone can vote<br />
+      <input type="radio" name="eligibility" value="closedreg" {% if not election.openreg %}CHECKED{% endif %} /> Only voters listed explicitly below can vote<br /> {% endcomment %}
+
+      {% if categories %}
+        <input type="radio" name="eligibility" value="limitedreg" {% if election.eligibility %}CHECKED{% endif %} /> only voters who are members of 
+        <select name="category_id">
+          {% for category in categories %}
+            <option value="{{category.id}}" {% if eligibility_category_id == category.id %}SELECTED{% endif %}> {{category.name}}</option>
+          {% endfor %}
+        </select>
+        <br />
+      {% endif %}
+      {% comment %} <input class="button" type="submit" value="Update" /> {% endcomment %}
+    </form>
+
+  {% endif %}
+{% endif %}
+
+
+{% if election.num_voters > 20 %}
+  <p>
+    {% if q %}
+      <p><em>searching for <u>{{q}}</u>.</em> [<a href="?">clear search</a>]</p>
+    {% else %}
+      <form method="get" action="{% url "election@voters@list-pretty" election.uuid %}"><b>search</b>: <input type="text" name="q" /> <input type="submit" value="search" /></form>
+    {% endif %}
+  </p>
+{% endif %}
+
+
+{% if admin_p %}
+  <!-- Add a Voter: WORK HERE-->
+  {% if upload_p and election.private_p  %}
+    <p>
+      <a class="button" href="{% url "election@voters@upload" election_uuid=election.uuid %}">Bulk upload voters</a>
+    </p>
+
+    {% if voter_files %}
+      Prior Bulk Uploads:
+      <ul>
+        {% for vf in voter_files %}
+          <li>
+            {% if vf.voter_file %}
+              {{vf.voter_file.size}}
+            {% else %}
+              {{vf.voter_file_content|length}}
+            {% endif %}
+            bytes, at {{vf.uploaded_at}}:
+            {% if vf.processing_finished_at %}
+              <em>done processing: {{vf.num_voters}} voters loaded</em>
+            {% else %}
+
+              {% if vf.processing_started_at %}
+                <em>currently processing</em>
+              {% else %}
+                <em>not yet processed</em>
+              {% endif %}
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %} 
+  {% endif %}
+{% endif %}
+
+{% if voters %}
+  <p>
+    <b>
+    {% if election.num_cast_votes %}
+      {% comment %} {{election.num_cast_votes}} cast vote{% ifequal election.num_cast_votes 1 %}{% else %}s{% endifequal %} {% endcomment %}
+    {% else %}
+      No votes yet
+    {% endif %}
+</b>
+</p>
+
+{% if voters_page.has_previous %}
+<a href="{% url "election@voters@list-pretty" election.uuid %}?page={{voters_page.previous_page_number}}&limit={{limit}}&q={{q|urlencode}}">Previous {{limit}}</a> &nbsp;&nbsp;
+{% endif %}
+
+
+{% comment %} Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voters}})&nbsp;&nbsp; {% endcomment %}
+
+{% if voters_page.has_next %}
+<a href="{% url "election@voters@list-pretty" election.uuid %}?page={{voters_page.next_page_number}}&limit={{limit}}&q={{q|urlencode}}">Next {{limit}}</a> &nbsp;&nbsp;
+{% endif %}
+<p class="no_margin"><b>Note: </b><em>Scan this QR Code using HelioScan application if you want to check whether your ballot tracker is in the bulletin board.</em></p>
+<img src="{{ qr_code }}" alt="QR Code" class="qr_code">
+
+{% comment %} <table class="voters_table">
+  <tr>
+    <th>#</th>
+    {% if admin_p or not election.use_voter_aliases %}
+      {% if admin_p %}
+        <th>Login</th>
+        <th>Email Address</th>
+      {% endif %}
+      <th>Name</th>
+    {% endif %}
+
+    {% if election.use_voter_aliases %}
+      <th>Alias</th>
+    {% endif %} {% endcomment %}
+    
+    {% comment %} <th>Smart Ballot Tracker</th> {% endcomment %}
+
+    {% comment %} {% if admin_p %}
+      <th>Actions</th>
+    {% endif %}
+  </tr>
+
+  {% for voter in voters %}
+    <tr>
+      <td>{{forloop.counter}}</td>
+      {% if admin_p or not election.use_voter_aliases %}
+        {% if admin_p %}
+          <td class="center">{{voter.voter_type}}</td>
+          <td>{{voter.voter_id}}</td>
+        {% endif %}
+        <td class="user_name_td"><img class="small-logo" src="/static/auth/login-icons/{{voter.voter_type}}.png" alt="{{voter.voter_type}}" /> {{voter.name}}</td>
+      {% endif %}
+      
+      {% if election.use_voter_aliases %}
+        <td>{{voter.alias}}</td>
+      {% endif %} {% endcomment %}
+      
+      {% comment %} <td><tt style="font-size: 1.4em;">{% if voter.vote_hash %}{{voter.vote_hash}} <span style="font-size:0.8em;"><!-- no link for now --></span>{% else %}&mdash;{% endif %}</tt></td> {% endcomment %}
+  
+
+      {% comment %} {% if admin_p %}
+        <td style="white-space: nowrap;">
+          {% if election.frozen_at %}
+            <a class="button_class_table" href="{% url "election@voters@email" election.uuid %}?voter_id={{voter.voter_login_id}}">Email</a> |
+          {% endif %}
+          <a class="button_class_table" onclick="return confirm('are you sure you want to remove {{voter.name}} ?');" href="{% url "election@voter@delete" election.uuid voter.uuid %}">Delete</a>
+        </td>
+      {% endif %}
+    </tr>
+  {% endfor %}
+</table> {% endcomment %}
+
+
+
+<table class="voters_table">
+  <tr>
+    <th>List of All Ballot Trackers</th>
+    {% comment %} <th>QR Code</th> {% endcomment %}
+  </tr>
+  {% for vote in castvote %}
+    <tr>
+      <td>{{ vote }}</td>
+      {% if forloop.first %}
+        {% comment %} <td rowspan="{{ castvote|length }}"> {% endcomment %}
+          {% comment %} <img src="{{ qr_code }}" alt="QR Code" class="qr_code"> {% endcomment %}
+        {% comment %} </td> {% endcomment %}
+      {% endif %}
+    </tr>
+  {% endfor %}
+</table>
+
+
+{% else %}
+<br />
+<em>As of now, there have been no participating voters.</em>
+<br><br><br>
+{% endif %}
+<div id="back_div">
+  <button class="button_class view_back" onclick="goBack()">Election Homepage</button>
+  
+{% if email_voters and election.frozen_at and admin_p %}
+<p><a class="button_class" href="{% url "election@voters@email" election.uuid %}">Email voters</a></p>
+{% endif %}
+
+  <button class="button_class next_button" onclick="redirectToTrustees()">Proceed</button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var previousURL = document.referrer;
+    var nextButton = document.querySelector('.next_button');
+
+    var viewButton = document.querySelector('.view_back');
+
+    // Check if the previous URL contains 'view'
+    if (previousURL.includes('question') || previousURL.includes('voters') ) {
+      nextButton.style.display = 'block';
+      
+    }
+    else {
+      nextButton.style.display = 'none';
+    }
+  });
+  function redirectToTrustees() {
+    var redirectURL = "{% url 'election@trustees@view' election.uuid %}";
+    window.location.href = redirectURL;
+  }
+
+  function goBack() {
+    var redirectURL = "{% url 'election@view' election.uuid %}";
+    window.location.href = redirectURL;
+    
+  }
+</script>
+</div>
+</div>
+<link rel="stylesheet" type="text/css" href="/static/boothcss/forms.css">
+{% endblock %}

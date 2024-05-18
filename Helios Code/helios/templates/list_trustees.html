@@ -1,0 +1,134 @@
+{% extends "helios/templates/cryptobase.html" %}
+
+
+{% block title %}Trustees for {{election.name}}{% endblock %}
+
+{% block content %}
+<div class="trustee_parent_div">
+  
+
+  <h3 class="title what_and_wa">Election: {{election.name}} &mdash; Trustees <span style="font-size:0.7em;"></span></h3>
+
+<div class="what-and-why trustee-home">
+
+<p class="center">
+    Trustees are responsible for calculating (i.e., decrypting) the election result.<br />
+    Each trustee generates a keypair and submits the public key to Helios.<br />
+    When it's time to calculate the tally (i.e., decrypt), each trustee needs to provide their secret key.
+</p>
+
+{% if not election.frozen_at %}
+
+<p class="center">
+  Helios is automatically your first trustee and will handle its keypair generation and decryption automatically.<br />
+  You may add additional trustees if you want, and you can even remove the Helios trustee.<br />
+  <b>However, we recommend you do this only if you have a solid understanding of the trustee's role.</b>
+</p>
+<p>
+  <a class="button_class_table" style="color: #ecf0f1;" onclick="return(confirm('Adding your own trustee requires a good bit more work to tally the election.\nYou will need to have trustees generate keypairs and safeguard their secret key.\n\nIf you are not sure what that means, we strongly recommend\nclicking Cancel and letting Helios tally the election for you.'));" href="{% url "election@trustees@new" election.uuid %}">Add a Trustee</a>
+</p>
+</div>
+</div>
+{% if admin_p %}
+<div class="add-trustee-container">
+
+</div>
+{% if not election.has_helios_trustee %}
+<div class="add-trustee-container">
+<p>
+    <a class="button_class" href="{% url "election@trustees@add-helios" election.uuid %}">Add Helios as a trustee</a>
+</p>
+</div>
+{% endif %}
+{% endif %}
+
+{% endif %}
+
+{% if not trustees|length %}
+
+{% else %}
+
+<table class="election_overview">
+  
+    <tr>
+      <th>Trustee Number</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Public Key Fingerprint</th>
+      {% if election.encrypted_tally %}
+        <th>Tally Status</th>
+      {% endif %}
+      {% if not election.frozen_at %}
+        <th>Actions</th>
+      {% endif %}
+    </tr>
+  
+    {% for t in trustees %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ t.name }}</td>
+        <td>{{ t.email }}</td>
+        <td>
+          {% if t.public_key_hash %}
+            <tt style="font-size:1.5em;">{{ t.public_key_hash }}</tt>
+          {% else %}
+            No public key uploaded yet.
+          {% endif %}
+        </td>
+        {% if election.encrypted_tally %}
+          <td>
+            {% if t.decryption_factors %}
+              <b>tally recorded for this trustee.</b>
+            {% else %}
+              <em>waiting for this trustee's tally</em>
+            {% endif %}
+          </td>
+        {% endif %}
+        <td>
+          {% if admin_p %}
+            {% if t.secret_key %}
+              {% if not election.frozen_at %}
+                <a class="button_class_table" onclick="return confirm('Are you sure you want to remove Helios as a trustee?');" href="{% url "election@trustees@delete" election.uuid %}?uuid={{ t.uuid }}">Delete Trustee</a>
+              {% endif %}
+            {% else %}
+              {% if not election.frozen_at %}
+                <a class="button_class_table" onclick="return confirm('Are you sure you want to remove this Trustee?');" href="{% url "election@trustees@delete" election.uuid %}?uuid={{ t.uuid }}">Delete Trustee</a>
+                <a class="button_class_table" onclick="return confirm('Are you sure you want to send this trustee his/her admin URL?');" href="{% url "election@trustee@send-url" election.uuid t.uuid %}">Send Login URL</a>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  
+</table>
+
+
+
+
+
+
+{% endif %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var previousURL = document.referrer;
+    var nextButton = document.querySelector('.next_button');
+
+    // Check if the previous URL contains 'view'
+    if (previousURL.includes('view')) {
+      nextButton.innerText = 'Election Homepage';
+    }
+ 
+  });
+
+  function redirectToView(){
+    var redirectURL = "{% url 'election@view' election.uuid %}";
+
+    window.location.href = redirectURL;
+  }
+</script>
+
+<button class="button_class next_button" onclick="redirectToView()">Done</button>
+<link rel="stylesheet" type="text/css" href="/static/boothcss/forms.css">
+
+{% endblock %}

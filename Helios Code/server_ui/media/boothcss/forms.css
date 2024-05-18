@@ -1,0 +1,567 @@
+
+form.prettyform {
+    font-size: 1.4em;
+  }
+  
+  form.prettyform label,input,textarea,select {
+      line-height: 1.8;
+  }
+  
+  form.prettyform label:not(.answer) {
+      display: block;
+      text-align: left;
+      float: left;
+      width: fit-content;
+      height: fit-content; 
+      padding-right: 10px;
+  }
+  
+  form.prettyform br {
+      clear: left;
+  }
+  
+  form.prettyform input, form.prettyform textarea, button {
+      border: 1px solid black;
+      margin: 5px;
+      font-size: 16pt;
+  }
+  
+  input.pretty {
+      font-size: 16pt;
+      border: 1px solid black;
+  }
+  
+  input.prettysmall {
+      font-size: 12pt;
+      border: 1px solid black;
+  }
+  
+  
+  table.pretty {
+      margin: 0.5em 1em 1em 2em;
+      border-collapse: collapse;
+      width: 80%;
+      
+  }
+  
+  table.pretty th, td {
+      border: none;
+      padding: 0.3em; 
+  }
+  /* table.pretty tr{
+      height: fit-content;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+  } */
+  
+  
+  #answers {
+      padding-left: 210px;
+      padding-top: 0px;
+      margin-top: 0px;
+  }
+  
+  #questions_div {
+      font-size: 1.4em;
+  }
+  
+  /* div.selected {
+    background: lightblue;
+  } */
+  
+  
+  /* New CSS for election form */
+  form.prettyform input[type="date"] {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px;
+  }
+  
+  form.prettyform input[type="time"] {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px;
+  }
+  
+  form.prettyform input[type="date"],
+  form.prettyform input[type="time"] { 
+      width: 45%; /* Adjust the width based on your preference */
+      margin-right: 5px; /* Add some space between date and time pickers */
+      display: inline-block;
+      border-radius: 4px;
+  }
+  
+  #id_short_name {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+  }
+  
+  #id_short_name::placeholder {
+      font-size: 16px; /* Adjust the font size for the placeholder */
+      color: #999; /* Adjust the color for the placeholder */
+  }
+  
+  #id_name {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+  }
+  
+  #id_name::placeholder {
+      font-size: 16px; /* Adjust the font size for the placeholder */
+      color: #999; /* Adjust the color for the placeholder */
+  }
+  
+  #id_description {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+  }
+  
+  #id_election_type {
+      margin-bottom: 10px;
+      font-size: 16px;
+      list-style-type: none; /* Remove list-style (asterisks) */
+      display: flex;
+      justify-content: space-evenly;
+  }
+  
+  
+  #id_election_type input[type="radio"] {
+      display: inline-block; 
+      margin-right: 5px; 
+  }
+  
+  #id_election_type .form-help-text {
+      font-size: 16px;
+      color: #555; 
+      display: inline-block;
+      margin-right: 10px; 
+  } 
+  
+  #id_help_email {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+  }
+  .title{
+      /* margin: 0rem; */
+  }
+  
+  .pretty > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > br:nth-child(2){
+      display: none;
+  }
+  .pretty > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(2) > br:nth-child(2){
+      display: none;
+  }
+  .pretty > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > br:nth-child(2){
+      display: none;
+  }
+  
+  /* change all help_text to be 12px font size
+      and change the color to #555 */
+  .pretty > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(2) > span:nth-child(3){
+      font-size: 16px;
+  }
+  .pretty > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > span:nth-child(3){
+      font-size: 16px;
+  }
+  .pretty > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > span:nth-child(3){
+      font-size: 16px;
+  }
+  
+  .pretty > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) {
+      display: flex;
+      justify-content: flex-start;
+      
+  }
+  .pretty > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) {
+      display: flex;
+      justify-content: flex-start;
+      
+  }
+  
+  .pretty tbody tr td{
+      height: 100%;
+  }
+  
+  html.js.no-touch.svg.inlinesvg.svgclippaths.no-ie8compat body div.wrapper div#contentbody.row form#create_election_form.prettyform table.pretty tbody tr td{
+      height: 100%;
+  }
+  
+  table.pretty td {
+      height: auto; 
+      display: block;
+  }
+  .pretty > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(2) > span:nth-child(3),
+  .pretty > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > span:nth-child(3),
+  .pretty > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > span:nth-child(3) {
+      margin-left: 10px;
+  }
+   
+  #create_election_form > div:nth-child(3) {
+      display: flex;
+      justify-content: center;
+      align-items: center; 
+  } 
+  h2{
+      text-align: center;
+      
+  }
+  .pretty label{
+      white-space: nowrap;
+  }
+  .pretty tr{
+      height: auto;
+  }
+  #create_election_form{
+      
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: auto;
+      justify-content: center;
+      width: 80%;
+  }
+  
+  .what-and-why{
+      /* border: 1px solid red; */
+      height: fit-content;
+  }
+  
+  .what-and-why table{
+      border: none;
+  }
+  table.pretty {
+      margin: 1em 1em 1em 2em;
+      border-collapse: collapse;
+      width: 70%; /* Adjust the width to make the outer box smaller */
+  }
+  
+  table.pretty tr {
+      display: flex;
+      
+  }
+  
+  table.pretty th {
+      text-align: left;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      border: none;
+      width: 20%;
+  }
+  
+  table.pretty td {
+      width: 75%;
+      padding: 1em;
+      text-align: left;
+      border: none;
+  }
+  
+  table.pretty th:first-child {
+      margin-right: auto;
+  }
+  .pretty > tbody:nth-child(1) > tr:nth-child(9) > td:nth-child(2){
+      font-size: 0.8rem;
+      
+  }
+  .pretty > tbody:nth-child(1) > tr:nth-child(10) > td:nth-child(2){
+      font-size: 0.8rem;
+      
+  }
+  
+  .button_class{
+      background-color: #2c3e50; /* Dark blue background color */
+      color: #ecf0f1; /* Light gray text color */
+      padding: 10px 30px; /* Adjusted padding for a slightly wider size */
+      font-size: 16px; /* Adjusted font size */
+      border: none; /* Remove default button border */
+      border-radius: 2rem; /* Adjusted border-radius for less square corners */
+      cursor: pointer; /* Change cursor on hover */
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s; /* Smooth transitions on hover and click */
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+      width: fit-content;
+      font-weight: normal;
+      /* height: 40px; */
+  }
+  
+  .button_class:hover{
+      background-color: #3498db; /* Slightly lighter blue on hover */
+      /* color: black; */
+      transform: scale(1.1); /* Slight scaling up on hover for visual effect */
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increased shadow on hover */
+  }
+  
+  .button_class:active{
+      transform: scale(0.95); /* Slight scaling down on click for visual feedback */
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Decreased shadow on click */
+  }
+  
+  #edit_election_form{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center; 
+  }
+  
+  .buttons{
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+      margin-bottom: 1rem;
+  }
+  .question_footer{
+      display: flex;
+      flex-direction: row;
+  }
+  
+  .prettyform.back {
+      margin-top: 20px; /* Adjust the margin as needed */
+  }
+  /* Style for dropdowns */
+  select {
+      width: 50px; /* Adjust the width as needed */
+      padding: 5px; /* Adjust padding as needed */
+      border: 1px solid #3498db; /* Border color */
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px; /* Font size */
+      color: #555; /* Text color */
+      background-color: #ecf0f1; /* Background color */
+      cursor: pointer;
+    }
+    
+    /* Style for dropdown options */
+    select option {
+      font-size: 14px; /* Font size */
+      color: #555; /* Text color */
+    }
+    
+    /* Style for selected option */
+    select option:checked {
+      background-color: #3498db; /* Selected option background color */
+      color: #fff; /* Selected option text color */
+    }
+  .drop{
+      width: 2.5rem;
+      margin-left: 15px;
+      /* margin-right: 25px; */
+  }
+  .drop2{
+      width: 2.5rem;
+      margin-left: 10px;
+  }
+  #question_form{
+      align-items: center;
+      text-align: center;
+      width: 100%;
+  }
+  
+  #contentbody{
+      /* border: #3498db 1px solid; */
+      max-width: 100%;
+      height: 100vh;
+      align-items: center;
+  }
+  #questions{
+      /* border: brown 1px solid; */
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      
+  }
+  .question_container{
+      order: 2;
+      width: 35%;
+      
+  }
+  .Add_question{
+      order: 1;
+      width: fit-content;
+      margin: 100px;
+  }
+  div[id^="q_view_"] {
+      /* Your styles for the specific div elements */
+      border: yellow 1px solid;
+      width: 100%;
+      height: fit-content;
+  }
+  
+  .buttons_div {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      width: 100%;
+    }
+  #question_form{
+      width: fit-content;
+  }
+  
+  .result_type 
+  ,.random_choice{
+      display: flex;
+      flex-direction: row;
+      /* justify-content: space-evenly; */
+      
+  }
+  .add_question_part_1{
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+  }
+  .select_div{
+      display: block;
+  }
+  
+  .radio_label{
+      margin-left: 24px;
+      margin-right: 84px;
+  }
+  .radio_lab{
+      margin-left: 100px;
+      margin-right: 72px;
+  }
+  #answer_table {
+      width: 100%; /* Adjust the percentage to your preference */
+      margin: auto; /* Center the table on the page */
+      border-collapse: collapse;
+      background-color: transparent;
+    }
+    .form_body{
+      background-color: transparent;
+    }
+  
+    #answer_table th, #answer_table td {
+      padding: 8px; /* Adjust the padding as needed */
+      border-collapse: collapse;
+      background-color: transparent;
+    }
+  
+    #answer_table input[type="text"] {
+      width: 100%; /* Make the input fields expand to the full width */
+      box-sizing: border-box; /* Include padding and border in the width calculation */
+    }
+  
+  .options_div{
+      border: yellow 1px solid;
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+  }
+  .select_from{
+      text-align: left;
+  }
+  
+  .tr_class{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+  }
+  .tr_question{
+      align-items: baseline;
+  }
+  .td_class{
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+  }
+  .text_class{
+      margin-right: 1rem;
+      width: 200px;
+      border: #3498db 1px solid;
+  }
+
+  .buttons-container{
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttons {
+    display: flex;
+    cursor: pointer
+}
+
+.center{
+    text-align: center;
+}
+
+.trustee-home{
+    width: fit-content;
+    /* border: 1px solid red; */
+    margin-top: 0.5rem;
+    background: none;
+    box-shadow: none;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+}
+
+.one-trustee{
+    display: flex;
+    flex-direction: row;
+    /* border: 1px solid red; */
+    justify-content: space-around;
+    align-items: center;
+}
+
+.add-trustee-container{
+    display: flex;
+    /* border: 1px solid red; */
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    height: fit-content;
+ }
+
+ .button_class_table {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: orange;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .button_class_table:hover {
+    /* background-color: #45a049; */
+    background-color: #3498db; /* Slightly lighter blue on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increased shadow on hover */
+    color: white;
+    transition: 0.3s;
+  }
+
+  .trustee-table{
+    width: 100%;
+  }
+  .trustee_parent_div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }

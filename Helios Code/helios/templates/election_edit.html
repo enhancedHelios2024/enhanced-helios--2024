@@ -1,0 +1,50 @@
+{% extends TEMPLATE_BASE %}
+
+{% block content %}
+  <h2 class="title">Update Election: {{election.name}}  
+     
+    </h2>
+  
+  {% if error %}
+    <p style="color: red;">{{error}}</p>
+  {% endif %}
+  
+  <!-- Include Flatpickr stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <form class="prettyform" action="" method="POST" id="edit_election_form">
+    <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
+    <table class="pretty">
+      {{election_form.as_table}}
+    </table>
+    <div class="buttons">
+      <input type="submit" value="Cancel" class="button_class" onclick="goToPreviousPage('cancel')" />
+      <label for="">&nbsp;</label>
+      <input type="submit" value="Update" class="button_class" onclick="goToPreviousPage('update')" />
+  </div>
+  
+  <script>
+      function goToPreviousPage(actionType) {
+          var previousURL = document.referrer;
+  
+          // Determine the redirect URL based on the action type and the previous URL
+          if (actionType === 'cancel') {
+            redirectURL = "{% url 'election@view' election.uuid %}";
+          } else if (actionType === 'update') { 
+            redirectURL = "{% url 'election@view' election.uuid %}";  // Replace with the appropriate home URL
+          }
+          window.location.href = redirectURL;
+        }
+  </script>
+  
+  </form>
+
+  <!-- Include Flatpickr script -->
+  <!-- Flatpickr stylesheet -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Flatpickr script -->
+<link rel="stylesheet" type="text/css" href="/static/boothcss/forms.css">
+
+{% endblock %}

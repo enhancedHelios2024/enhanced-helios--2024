@@ -1,0 +1,53 @@
+{% extends "server_ui/templates/base.html" %}
+{% block content %}
+{% load static %}
+<div id="messageContainer"></div>
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" defer></script>
+<!-- HTML code -->
+<div id="formContainer"></div>
+
+<script>
+    var userData = JSON.parse('{{ user_json|escapejs }}');
+    if (userData.server_user_face_share) {
+        // Content to render if server_user_face_share exists
+        document.getElementById('messageContainer').innerHTML = `
+            <h1> Welcome ${userData.name} </h1>
+            <h2> Log In Step: Scan your Face </h2>
+        `;
+    } else {
+        // Content to render if server_user_face_share does not exist
+        document.getElementById('messageContainer').innerHTML = `
+            <h1> Welcome ${userData.name} </h1>
+            <h2> Registration: Scan your Face </h2>
+        `;
+    }
+</script>
+
+<script src="{% static '/static/auth/login.js' %}" defer></script>
+<script src="https://unpkg.com/@regulaforensics/vp-frontend-face-components@latest/dist/main.js"></script>
+{% endblock scripts %}
+{% comment %} <div> {% endcomment %}
+    <face-liveness id="faceCapture" class="faceCapture"></face-liveness>
+{% comment %} </div> {% endcomment %}
+<br>
+<br>
+<br>
+<img id="loading" style="display: none;" src="/static/helios/loading.gif" alt="Loading...">
+{% endblock content %}
+<div id="loading" style="display: none;">
+</div>
+
+{% comment %} <video autoplay="true" id="video-element"></video>
+
+<div id="img-element"></div>
+
+<div>
+    <button id="capture-btn">take photo</button>
+    <button id="reload-btn">reload</button>
+</div> {% endcomment %}
+
+{% comment %} <script>
+    var userData = JSON.parse('{{ user_json|escapejs }}');
+    console.log("THE SERVER USER FACE SHARE IS " + userData.server_user_face_share); 
+</script> {% endcomment %}

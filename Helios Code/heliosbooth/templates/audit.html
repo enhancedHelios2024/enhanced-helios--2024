@@ -1,0 +1,37 @@
+<h3 style="text-align: center;">Step 1 of 2 in Verifying your Ballot</h3>
+
+<p>
+<b><u>IMPORTANT</u></b>: This ballot, now that it being verified, <em><b>will not be tallied</em>.</b><br /><br>
+To cast the current ballot, you must click the "Back to Voting" button below, and then choose to "Submit this Ballot" instead of "Spoil & Verify Ballot". <br><br> 
+When you click on "Back to Voting", you may notice that your ballot tracker number has changed. <b>This is normal</b>, as the system automatically generates a new tracker number for your ballot by encrypting it again.
+</p>
+
+<p>
+<b>Why?</b> Helios prevents you from verifying and casting the same ballot to provide you with some protection against coercion.
+</p>
+
+<p>
+<b>Next Step: </b>You have the option to verify your ballot in two ways. Firstly, you can use the HelioScan app to scan the QR code displayed at the bottom of the page. Alternatively, <a onclick="$('#audit_trail').select(); return false;" href="#">
+    Select your ballot audit info (i.e., the text below)</a>, copy it to your clipboard, then go to the <a target="_blank" href="single-ballot-verify.html?election_url={$T.election_url}">ballot verifier</a> to verify it.<br /><br>
+You can verify your ballot as many times as you please, and once you're fully satisfied with the results, you can click the "Back to Voting" button to cast your ballot, as explained above.
+</p>
+ 
+
+<form action="#" class="center" >
+    
+<textarea name="audit_trail" id="audit_trail" rows="10" wrap="soft" style="width: 100%;
+resize: vertical;">
+{$T.audit_trail}
+</textarea>
+
+<br /><br />
+Before going back to voting,<br />
+you can post this audited ballot to the Helios tracking center so that others might double-check the verification of this ballot.
+<br /><br />
+<b>Even if you post your audited ballot, you must go back to voting and choose "cast" if you want your vote to count.</b>
+<br /><br />
+<button onclick="BOOTH.reset_ciphertexts();BOOTH.seal_ballot(); return false;" class="pretty button_class">Back to voting</button>
+&nbsp; &nbsp;&nbsp;
+<button class="button_class" onclick="$(this).attr('disabled', 'disabled');BOOTH.post_audited_ballot(); return false;" id="post_audited_ballot_button" class="pretty" style="font-size:0.8em;">Post audited ballot to tracking center</button>
+
+</form>

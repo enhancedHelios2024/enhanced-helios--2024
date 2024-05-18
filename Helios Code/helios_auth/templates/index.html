@@ -1,0 +1,19 @@
+{% extends TEMPLATE_BASE %}
+{% block content %}
+<div class="login_container">
+<h1>Authentication</h1>
+
+{% if user and authentication_step == 3 %}
+<p style="font-size: 1.4em;">
+    You are currently logged in as<br /><b>{{user.user_id}}</b> via <b>{{user.user_type}}</b>.
+</p>
+<p>
+    {% comment %} <a href="{% url "auth@logout" %}">logout</a> {% endcomment %}
+    <a href="{% url "home" %}" class="button_class">Helios Homepage</a>
+</p>
+
+{% else %}
+{% include "login_box.html" %}
+{% endif %}
+</div>
+{% endblock %}

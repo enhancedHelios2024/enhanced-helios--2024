@@ -1,0 +1,187 @@
+{% extends "helios/templates/cryptobase.html" %}
+{% block content %}
+<script language="javascript">
+
+var PUBLIC_KEY, PROOF;
+
+function clear_keys() {
+    $('#sk_download').hide();
+    $('#pk_form').hide();
+    $('#buttons').show();
+    $('#clear_button').hide();
+    $('#reuse').hide();
+}
+
+function show_key_reuse() {
+    $('#generator').hide();
+    $('#reuse').show();
+}
+
+SECRET_KEY = null;
+
+function reuse_key(secret_key_text) {
+    SECRET_KEY = ElGamal.SecretKey.fromJSONObject(jQuery.secureEvalJSON(secret_key_text));
+
+    $('#reuse').hide();
+    setup_public_key_and_proof();
+    show_pk();
+}
+
+// start collecting some local randomness
+sjcl.random.startCollectors();
+
+$(document).ready(function() {
+    clear_keys();
+    $('#generator').hide();
+
+    // get some more server-side randomness for keygen
+    $.getJSON('{% url "election@get-randomness" election.uuid %}', function(result) {
+       sjcl.random.addEntropy(result.randomness);
+       BigInt.setup(function() {
+          ELGAMAL_PARAMS = ElGamal.Params.fromJSONObject({{eg_params_json|safe}});
+          $('#waiting_message').hide();
+          $('#generator').show();
+       });
+    });
+});
+
+
+function generate_keypair() {
+    $('#buttons').hide();
+    
+    try {
+        SECRET_KEY = ELGAMAL_PARAMS.generate();
+    } catch (e) {
+        alert(e);
+    }
+
+    setup_public_key_and_proof();
+}
+
+function setup_public_key_and_proof() {    
+    // generate PoK of secret key
+    PROOF = SECRET_KEY.proveKnowledge(ElGamal.fiatshamir_dlog_challenge_generator);
+    PUBLIC_KEY = SECRET_KEY.pk;
+
+    var pk_val = jQuery.toJSON({'pok': PROOF, 'public_key': PUBLIC_KEY});
+    $('#pk_textarea').val(pk_val);
+    $('#pk_hash').html(b64_sha256(jQuery.toJSON(PUBLIC_KEY)));
+
+    $('#clear_button').show();
+    show_sk();
+}
+
+function show_sk() {
+    $('#sk_download').show();
+}
+
+function download_sk() {
+    $('#pk_content').show();
+    $('#sk_content').html(jQuery.toJSON(SECRET_KEY));
+}
+
+function download_sk_to_file(filename) {
+    var element = document.createElement('a');
+    element.setAttribute('href','data:text/plain;charset=utf-8,'+ encodeURIComponent(jQuery.toJSON(SECRET_KEY)));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
+
+function show_pk() {
+    console.log('show_pk')
+    $('#sk_download').hide();
+    $('#pk_content').hide();
+    $('#pk_hash').show();
+    $('#pk_form').show();
+}
+
+</script>
+
+<h2 class="title">Election: {{election.name}} &mdash; Trustee {{trustee.name}}'s Key Setup</h2>
+<div class="single-container">
+    <div class="what-and-why single-container single-container-col">
+        <p>
+            As a trustee, it's time to set up your key for this election.
+        </p>
+
+        <p id="waiting_message">
+            Please wait for the generator to load...
+        </p>
+
+        <p id="generator">
+
+            <span id="buttons"><button onclick="generate_keypair(); return false;" id="generate_button" class="button generate-btn">Generate Election Keys</button></span>
+
+            <br />
+            If you've already generated a keypair, you can <a href="javascript:show_key_reuse()">reuse it</a>.
+        </p>
+    </div>
+    
+</div>
+
+<div id="reuse" class="flex_center">
+    <h3>Reusing a Key</h3>
+    <div class="what-and-why">    
+        <p>
+            Enter your complete secret key below:
+        </p>
+        <form class="flex_center" onsubmit="reuse_key(this.secret_key.value); return false;">
+            <textarea cols="80" rows="5" wrap="soft" name="secret_key"></textarea>
+            <br />
+            <input type="submit" class="button_class" value="Reuse this secret key" />
+        </form>
+    </div>
+</div>
+
+
+<div id="sk_download">
+    <h3 class="center">Your Secret Key</h3>
+    <div class="what-and-why your-secret-key important-info-trustee">
+        <span id="clear_button">
+            Your key has been generated, but you have the option to <a href="javascript:clear_keys();">clear it from memory and start from scratch</a> if you prefer.<br>
+        </span>
+        <p>
+            <button class="button_class" style="font-size:16pt;" onclick="download_sk(); $('#pk_link').show();">Show my secret key</button>
+        </p>
+
+        <div style="display:none;" id="pk_content">
+            <p class="center"><span>Below is your (trustee) secret key.</span> <br> <span>Please copy, save, and store it securely. </span> <br> <span>You can also choose to dowload it to a file. </span><br><br>
+                <b>Note: It is extremely important not to lose it. <br> Losing it will result in not being able to decrypt and calculate the final election tally.</b><br>
+            </p>
+
+            <textarea id="sk_content" rows="5" wrap="soft" cols="50" style="height: 25em;"></textarea>
+        </div>
+
+        <div class="flex_center" style="display:none;" id="pk_link">
+            <p>
+                <a class="button_class" id="download_to_file" href="javascript:download_sk_to_file('trustee_key_for_{{election.name}}.txt');">Download private (i.e., secret) key to a file</a>
+            </p>
+            <p>
+                <a class="button_class" href="javascript:show_pk();">I have saved the key and am ready to go to the next step</a>
+            </p>
+        </div>
+    </div>
+</div>
+<div>
+    <form method="POST" id="pk_form" action="{% url "election@trustee@upload-pk" election.uuid trustee.uuid %}">
+        <h3>Your Public Key</h3>
+        <p>
+            It's time to upload the public key to the server.
+        </p>
+        <p>
+            The fingerprint of your public key is: <tt id="pk_hash" style="font-size: 1.5em; font-weight: bold;"></tt>.<br />
+            You may want to save this to confirm that your public key was properly stored by the server.<br />
+            (Your public key is not currently being displayed because you do not need to save it, the fingerprint is sufficient.)
+        </p>
+<textarea id="pk_textarea" name="public_key_json" cols="80" rows="10" style="display:none;">
+</textarea>
+        <input type="submit" value="Upload your public key">
+    </form>
+</div>
+
+<div id="applet_div"></div>
+<br /><br />
+{% endblock %}

@@ -1,0 +1,6 @@
+<h1 id="election_name">Election: {$T.election.name}</h1><br>
+{#if $T.election.BOGUS_P}
+The public key for this election is not yet ready. This election is in preview mode only.
+{#else}
+<div class="center" style="font-size: 1.2rem">Election ID: <span id="election_hash" style="font-weight:bold;">{$T.election.hash}</span></div><br><br>
+{#/if}

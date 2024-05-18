@@ -1,0 +1,81 @@
+{% extends TEMPLATE_BASE %}
+
+{% block content %}
+  <h2 class="title">Election: {{election.name}} &mdash; Bulk Upload Voters 
+    
+  </h2>
+
+ <form method="post" action="" id="upload_form" enctype="multipart/form-data">
+<p>
+    If you would like to specify your list of voters by name and email address,<br />
+    you can bulk upload a list of such voters here.<br /><br />
+</p>
+  
+<div class="csv-table-container">
+  <table>
+    <tr>
+      <th colspan="3"> Please prepare a text file of comma-separated values (CSV) with one of the following options</th>
+    </tr>
+    <tr>
+      <td><b>Option</b></td>
+      <td><b>Format</b></td>
+      <td><b>Example</b></td>
+    </tr>
+    <tr>
+      <td>Email & Password</td>
+      <td>password,&lt;unique_id&gt;,&lt;email&gt,&lt;full name&gt;</td>
+      <td>password,bobsmith,bob@acme.org,Bob Smith</td>
+    </tr>
+    <tr>
+      <td>Githhub</td>
+      <td>github,&lt;username&gt;</td>
+      <td>github,benadida</td>
+    </tr>
+  </table>
+</div>
+
+  
+  <p>HINT: The easiest way to prepare such a file is to use a spreadsheet program and to export as "CSV".</p>
+
+  {% comment %} {% if error %}
+  <div style="color: red;">{{error}}</div>
+  {% endif %}
+    <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
+
+    <input type="file" name="voters_file" />
+      {% comment %}  
+    <input type="submit" value="go" />
+     {% endcomment %}
+</form> 
+
+<div id="processing">
+</div>
+
+<div id="done" style="display:none;">
+  OK, done uploading.<br />
+  You can now <a href="./manage">view the list of voters</a>.
+</div>
+
+<div class="buttons-container"> 
+<a href="{% url "election@view" election.uuid %}"> <button> Back to Election </button> </a>
+
+<form method="post" action="" id="upload_form" enctype="multipart/form-data">
+  {% if error %}
+    <div style="color: red;">{{error}}</div>
+    {% endif %}
+      <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
+
+      <input type="file" name="voters_file" />
+      {% comment %} <input type="submit" value="go" /> {% endcomment %}
+  <button type="submit" class="button_class"> Proceed </button>
+</form>
+</div>
+<div class="back_div">
+  <span style="font-size:0.7em;">
+    <a class="button_class" href="{% url "election@view" election.uuid %}">Election Homepage</a>
+  </span>
+  
+</div>
+{% comment %} <link = rel="stylesheet" type="text/css" href="/static/boothcss/forms.css"> {% endcomment %}
+
+{% endblock %}

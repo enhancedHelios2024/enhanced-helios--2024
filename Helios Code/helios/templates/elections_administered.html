@@ -1,0 +1,40 @@
+{% extends TEMPLATE_BASE %}
+
+{% block content %}
+  <h2 class="title">Elections you Administer <span style="font-size:0.7em;"></h2>
+
+    <table class="election_overview">
+      <thead>
+        <tr>
+          <th>Election Name</th>
+          <th>Number of Participants</th>
+          <th>Number of Cast Votes</th>
+          <th>Election Type</th>
+          <th>Election Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for election in elections %}
+          <tr>
+            <td><a href="{% url "election@view" election.uuid %}">{{ election.name }}</a></td>
+            <td>{{ election.num_voters }}</td>
+            <td>{{ election.num_cast_votes }}</td>
+            {% if election.private_p %}
+            <td>Private</td>
+            {% else %}
+            <td>Public</td>
+            {% endif %}
+            {% if election.openreg %}
+            <td>Open</td>
+            {% else %}
+            <td>Closed</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+<div class="send_div">
+  <a  class="button_class" href="/">Homepage</a>
+</div>
+{% endblock %}

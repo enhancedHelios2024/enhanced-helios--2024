@@ -1,0 +1,164 @@
+<div class="questions_container" id="questions_container">
+  {#foreach $T.questions as question}
+    <div id="q_view_{$T.question$index}" class="card questions_cards card_with_options">
+      <h4>
+        Question {$T.question$index + 1}:{$T.question.question} <br>
+        
+        Question parameters: <ul class="ul_div">
+          <li>Voter can select between {$T.question.min} and {#if $T.question.max != null}{$T.question.max}{#else}unlimited{#/if} choices</li>
+          <li>Result type: {$T.question.result_type}</li>
+          <li>Random choices: {#if $T.question.randomize_answer_order}Yes{#else}No{#/if}</li>
+        </ul>
+      </h4>
+      <div class="question_options_div">
+        <h4>Question choices:</h4>
+        <ul class="ul_div">
+          {#foreach $T.question.answers as answer}
+            <li> 
+              {$T.answer}
+              {#if $T.question.answer_urls[$T.answer$index}
+                <a target="_new" href="{$T.question.answer_urls[$T.answer$index]}">more</a>
+              {#/if}
+            </li>
+          {#/for}
+        </ul> 
+      </div>
+      <div class="action_div_card">
+        {#if $T.admin_p}
+          {#if $T.question$index > 0}
+            <a class="button_class_table" href="javascript:question_move_up({$T.question$index});">Shift Up</a>
+          {#/if}
+          <a class="button_class_table" onclick="return confirm('Are you sure you want to remove this question?');" href="javascript:question_remove({$T.question$index})">Delete</a> 
+          <a class="button_class_table" href="javascript:question_edit({$T.question$index})">Edit</a>
+        {#/if}
+      </div>
+    </div>
+
+    <div id="q_edit_{$T.question$index}" class="Add_question card edit_question_div"style="display:none;" >
+      <form id="question_edit_{$T.question$index}_form" onsubmit="question_update({$T.question$index}, this); return false;" action="#">
+        <p>
+      
+          <input type="hidden" name="choice_type" value="approval" />
+          Select between &nbsp;&nbsp;
+          <select name="min" class="select_numbers">
+            <option selected>0</option>
+            {#for option_index = 1 to 20}
+              <option>{$T.option_index}</option>
+            {#/for}
+          </select>
+  
+          &nbsp;(min) and
+  
+          <select name="max" class="select_numbers">
+            <option>0</option>
+            <option selected>1</option>
+            {#for option_index = 2 to 50}
+              <option>{$T.option_index}</option>
+            {#/for}
+            <option value="">- (approval)</option>
+          </select>
+  
+          (max) choices.
+          <br>
+  
+          Result Type:
+          <select name="result_type">
+            <option selected>absolute</option>
+            <option>relative</option>
+          </select>
+          <br>
+          Random Choice Order:&nbsp;
+          <select name="randomize_answer_order">
+            <option selected value="0">no</option>
+            <option value="1">yes</option>
+          </select>
+          <br>
+        </p>
+
+        <table id="answer_table_{$T.question$index}" class="answer_table">
+          <tbody>
+            <tr><th>Question:</th><td><input type="text" name="question" size="70" /></td></tr>
+          </tbody>
+          <tfoot class="footer_action"> 
+            <tr class="add_button"><td><a class="button_class_table" href="javascript:add_answers($('#answer_table_{$T.question$index}'),1)">Add 1 more choice</a></tr></td>
+            
+            <tr class="td_action">
+                <td class="td_action">
+                  <div class="action_div">
+                    <input class="button_class_table" type="reset" value="cancel" onclick="question_edit_cancel({$T.question$index});" />
+                    <input class="button_class_table" type="submit" value="update question" /> 
+                  </div>
+                </td>
+            </tr>
+            </div>
+          </tfoot>
+
+        </table>
+      </form>
+    </div>
+    {#else}
+    No questions yet <br>
+    All submitted questions will be displayed here.
+  {#/for}
+</div>
+
+
+<div class="card Add_question" id="question_form">
+  {#if $T.admin_p}
+    <h4>Add a Question:</h4>
+    <form id="question_form" onsubmit="question_add(this); return false;" action="#">
+      <p>
+      
+        <input type="hidden" name="choice_type" value="approval" />
+        Select between &nbsp;&nbsp;
+        <select name="min" class="select_numbers">
+          <option selected>0</option>
+          {#for option_index = 1 to 20}
+            <option>{$T.option_index}</option>
+          {#/for}
+        </select>
+
+        &nbsp;(min) and
+
+        <select name="max" class="select_numbers">
+          <option>0</option>
+          <option selected>1</option>
+          {#for option_index = 2 to 50}
+            <option>{$T.option_index}</option>
+          {#/for}
+          <option value="">- (approval)</option>
+        </select>
+
+        (max) choices.
+        <br>
+
+        Result Type:
+        <select name="result_type">
+          <option selected>absolute</option>
+          <option>relative</option>
+        </select>
+        
+        &nbsp;&nbsp;
+        Random Choice Order:&nbsp;
+        <select name="randomize_answer_order">
+          <option selected value="0">no</option>
+          <option value="1">yes</option>
+        </select>
+        <br>
+      </p>
+
+      <table id="answer_table" style="width:100%;">
+        <tbody>
+          <tr><th>Question:</th><td><input type="text" name="question" size="70" /></td></tr>
+        </tbody>
+
+      </table>
+      <!-- <a  href="javascript:add_answers($('#answer_table'), 1)">Add 1 more choice</a> -->
+      <div class="action_div">
+        <a class="button_class_table" href="javascript:add_answers($('#answer_table'), 1)">Add 1 more choice</a>
+        <input class="button_class_table" type="submit" value="Add question" />
+      </div>
+      
+    </form>
+  {#/if}
+</div>

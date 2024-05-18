@@ -1,0 +1,66 @@
+{% extends TEMPLATE_BASE %}
+
+{% block title %}Contact Voters for {{election.name}}{% endblock %}
+{% block content %}
+<script>
+var voter_id = null;
+{% if voter %}
+voter_id = '{{voter.voter_id}}';
+{% endif %}
+</script>
+
+  <h2 class="title">Election: {{election.name}} &mdash; Contact Voters </h2>
+
+{% if voter %}  
+  <p>
+    You are sending this email to a specific user: <b>{{voter.name}} ({{voter.voter_id}})</b>
+  </p>
+{% endif %}
+
+<p>
+<b>Email templates</b>:
+
+{% for template_option in templates %}
+{% if template_option.0 == template %}
+<b>{{template_option.1}}</b>
+{% else %}
+<a href="?template={{template_option.0}}&voter_id={{voter.voter_login_id}}">{{template_option.1}}</a>
+{% endif %}
+&nbsp;&nbsp;&nbsp;
+{% endfor %}
+
+<pre style="margin:10px; border: 1px solid #888; padding:20px">
+Subject: {{default_subject}}
+
+{{default_body|safe}}
+</pre>
+
+<p>
+You may tweak the subject and add a custom message using the form below.
+</p>
+
+  <form class="prettyform" action="" method="POST" id="email_form">
+    <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
+    <input type="hidden" name="template" value="{{template}}" />
+    <input type="hidden" name="voter_id" value="{{voter.voter_login_id}}" />
+    <table>
+     {{email_form.as_table}}
+     </table>
+  <div class="send_div back_div">
+  <a class="button_class" href="{% url "election@view" election.uuid %}">Election Homepage</a>
+  <input type="submit" value="Send Email" id="send_button" class="button_class" />
+  </div>
+  </form>
+  
+  <div id="processing">
+  </div>
+  
+  <div id="done" style="display:none;">
+    Done, go <a href="{% url "election@view" election.uuid %}">Back to election</a>.
+  </div>
+
+  <div id="error" style="display:none;">
+    Error emailing participants. Check server settings, make sure there's an SMTP server.
+  </div>
+
+{% endblock %}

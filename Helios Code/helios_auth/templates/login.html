@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% comment %} {% block scripts %}
+<script src="{% static 'login.js' %}" defer></script>
+{% endblock scripts %} {% endcomment %}
+{% block content %}
+<video autoplay="true" id="video-element"></video>
+
+<div id="img-element"></div>
+
+<div>
+    <button id="capture-btn">take photo</button>
+    <button id="reload-btn">reload</button>
+</div>
+
+{% endblock content %}
